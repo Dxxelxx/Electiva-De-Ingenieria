@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bebidas del Pacífico</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #0f2027, #2c5364);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(0,0,0,0.6);
+            padding: 20px;
+            margin: 50px auto;
+            width: 400px;
+            border-radius: 15px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 90%;
+        }
+
+        button {
+            padding: 10px;
+            background: #00c9ff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        button:hover {
+            background: #92fe9d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🥤 Bebidas del Pacífico</h1>
+
+    <form action="/comprar" method="POST">
+        <input type="text" name="nombre" placeholder="Nombre" required><br>
+        <input type="text" name="telefono" placeholder="Teléfono" required><br>
+
+        <h3>Selecciona tus bebidas</h3>
+
+        {% for b in bebidas %}
+            <input type="checkbox" name="bebidas" value="{{b[0]}}">
+            {{b[1]}} - ${{b[2]}}<br>
+        {% endfor %}
+
+        <br>
+        <button type="submit">Comprar</button>
+    </form>
+</div>
+
+</body>
+</html>
