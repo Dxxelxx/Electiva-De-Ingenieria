@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from conexion import conectar
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -13,6 +14,7 @@ def index():
 
     conexion.close()
     return render_template("index.html", bebidas=bebidas)
+
 
 @app.route("/comprar", methods=["POST"])
 def comprar():
@@ -31,11 +33,16 @@ def comprar():
     cliente_id = cursor.fetchone()[0]
 
     total = 0
+    productos = []
 
+    # Obtener productos seleccionados
     for bebida_id in seleccion:
-        cursor.execute("SELECT precio FROM bebidas WHERE id=%s", (bebida_id,))
-        precio = cursor.fetchone()[0]
-        total += precio
+        cursor.execute("SELECT id, nombre, precio FROM bebidas WHERE id=%s", (bebida_id,))
+        bebida = cursor.fetchone()
+
+        if bebida:
+            productos.append(bebida)
+            total += bebida[2]
 
     # Guardar pedido
     cursor.execute(
@@ -46,7 +53,15 @@ def comprar():
     conexion.commit()
     conexion.close()
 
-    return f"<h2>Compra realizada 💰 Total: ${total}</h2><a href='/'>Volver</a>"
+    return render_template(
+        "recibo.html",
+        nombre=nombre,
+        telefono=telefono,
+        productos=productos,
+        total=total,
+        fecha=datetime.now().strftime("%d/%m/%Y %H:%M")
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

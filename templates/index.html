@@ -1,60 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Bebidas del Pacífico</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial;
-            background: linear-gradient(135deg, #0f2027, #2c5364);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            margin: 0;
             color: white;
-            text-align: center;
         }
 
         .container {
-            background: rgba(0,0,0,0.6);
-            padding: 20px;
+            max-width: 500px;
             margin: 50px auto;
-            width: 400px;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.7);
+            padding: 30px;
+            border-radius: 20px;
         }
 
         input {
-            padding: 8px;
-            margin: 5px;
-            width: 90%;
+            width: 95%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: none;
         }
 
-        button {
+        .bebida {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.1);
             padding: 10px;
-            background: #00c9ff;
-            border: none;
-            color: white;
-            cursor: pointer;
+            margin: 5px 0;
             border-radius: 10px;
         }
 
-        button:hover {
-            background: #92fe9d;
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #00c9ff, #92fe9d);
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
     <h1>🥤 Bebidas del Pacífico</h1>
 
     <form action="/comprar" method="POST">
-        <input type="text" name="nombre" placeholder="Nombre" required><br>
-        <input type="text" name="telefono" placeholder="Teléfono" required><br>
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="telefono" placeholder="Teléfono" required>
 
         <h3>Selecciona tus bebidas</h3>
 
         {% for b in bebidas %}
-            <input type="checkbox" name="bebidas" value="{{b[0]}}">
-            {{b[1]}} - ${{b[2]}}<br>
+        <div class="bebida">
+            <label>
+                <input type="checkbox" name="bebidas" value="{{b[0]}}">
+                {{b[1]}}
+            </label>
+            <span>${{b[2]}}</span>
+        </div>
         {% endfor %}
 
-        <br>
         <button type="submit">Comprar</button>
     </form>
 </div>
