@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f4f6f9;
+            background: #eef2f7;
         }
 
         .recibo {
@@ -18,36 +18,64 @@
             background: white;
             padding: 25px;
             border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
         .header {
             text-align: center;
             border-bottom: 2px dashed #ccc;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .info {
+            margin-top: 15px;
+            font-size: 14px;
         }
 
         .producto {
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid #eee;
-            padding: 5px 0;
+            padding: 8px 0;
         }
 
-        .total {
-            text-align: right;
+        .totales {
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        .totales div {
+            display: flex;
+            justify-content: space-between;
+            margin: 3px 0;
+        }
+
+        .total-final {
             font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
+            border-top: 2px solid #000;
+            padding-top: 5px;
         }
 
         .btn {
             display: block;
             text-align: center;
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: 20px;
+            padding: 12px;
             background: #2c5364;
             color: white;
             text-decoration: none;
             border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .precio {
+            font-weight: 500;
         }
     </style>
 </head>
@@ -61,21 +89,42 @@
         <p>Recibo de compra</p>
     </div>
 
-    <p><strong>Cliente:</strong> {{nombre}}</p>
-    <p><strong>Teléfono:</strong> {{telefono}}</p>
-    <p><strong>Fecha:</strong> {{fecha}}</p>
+    <div class="info">
+        <p><strong>Cliente:</strong> {{nombre}}</p>
+        <p><strong>Teléfono:</strong> {{telefono}}</p>
+        <p><strong>Fecha:</strong> {{fecha}}</p>
+    </div>
 
     <h4>Productos:</h4>
 
     {% for p in productos %}
     <div class="producto">
         <span>{{p[1]}}</span>
-        <span>${{p[2]}}</span>
+        <span class="precio">
+            ${{ "{:,}".format(p[2]).replace(",", ".") }}
+        </span>
     </div>
     {% endfor %}
 
-    <div class="total">
-        Total: ${{total}}
+    <!-- 🧮 TOTALES -->
+    <div class="totales">
+        <div>
+            <span>Subtotal:</span>
+            <span>${{ "{:,}".format(total).replace(",", ".") }}</span>
+        </div>
+
+        {% if domicilio > 0 %}
+        <div>
+            <span>Domicilio:</span>
+            <span>${{ "{:,}".format(domicilio).replace(",", ".") }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 💰 TOTAL FINAL -->
+    <div class="total-final">
+        <span>Total:</span>
+        <span>${{ "{:,}".format(total_final).replace(",", ".") }}</span>
     </div>
 
     <a href="/" class="btn">Volver</a>

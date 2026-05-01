@@ -4,25 +4,24 @@ conexion = conectar()
 cursor = conexion.cursor()
 
 bebidas = [
-    ("Viche", 10.000),
-    ("Arrechón", 12.000),
-    ("Tomaseca", 9.000),
-    ("Borojo con leche", 8.000),
-    ("Jugo de chontaduro", 7.000),
-    ("Lulada", 6.000),
-    ("Agua de panela", 3.000),
-    ("Jugo de maracuyá", 5.000),
-    ("Jugo de mango", 5.000),
-    ("Café", 2.000)
+    ("Viche", 10000),
+    ("Arrechón", 12000),
+    ("Tomaseca", 9000),
+    ("Borojo con leche", 8000),
+    ("Jugo de chontaduro", 7000),
+    ("Lulada", 6000),
+    ("Agua de panela", 3000),
+    ("Jugo de maracuyá", 5000),
+    ("Jugo de mango", 5000),
+    ("Café", 2000)
 ]
 
-for bebida in bebidas:
-    cursor.execute(
-        "INSERT INTO bebidas (nombre, precio) VALUES (%s, %s)",
-        bebida
-    )
+cursor.executemany(
+    "INSERT INTO bebidas (nombre, precio) VALUES (%s, %s)",
+    bebidas
+)
 
 conexion.commit()
 conexion.close()
 
-print("Bebidas insertadas")
+print("✅ Bebidas insertadas correctamente")
