@@ -80,51 +80,53 @@ def comprar():
 
     nombre = request.form["nombre"]
     telefono = request.form["telefono"]
-    seleccion = request.form.getlist("bebidas")
     domicilio = request.form.get("domicilio")
-
-    if not seleccion:
-        return "❌ Debes seleccionar al menos una bebida"
 
     conexion = conectar()
     cursor = conexion.cursor()
 
-    # Cliente
+    # 🔥 Obtener bebidas desde BD
+    cursor.execute("SELECT id, nombre, precio FROM bebidas")
+    bebidas = cursor.fetchall()
+
+    productos = []
+    total = 0
+
+    # 🔥 NUEVA LOGICA CON CANTIDADES
+    for bebida in bebidas:
+        bebida_id = bebida[0]
+        cantidad = int(request.form.get(f"cantidad_{bebida_id}", 0))
+
+        if cantidad > 0:
+            productos.append((bebida, cantidad))
+            total += bebida[2] * cantidad
+
+    # ❌ Si no seleccionó nada
+    if not productos:
+        return "❌ Debes seleccionar al menos una bebida"
+
+    # Crear cliente
     cursor.execute(
         "INSERT INTO clientes (nombre, telefono) VALUES (%s, %s) RETURNING id",
         (nombre, telefono)
     )
     cliente_id = cursor.fetchone()[0]
 
-    total = 0
-    productos = []
-
-    for bebida_id in seleccion:
-        cursor.execute(
-            "SELECT id, nombre, precio FROM bebidas WHERE id=%s",
-            (bebida_id,)
-        )
-        bebida = cursor.fetchone()
-
-        if bebida:
-            productos.append(bebida)
-            total += bebida[2]
-
     costo_domicilio = 5000 if domicilio else 0
     total_final = total + costo_domicilio
 
-    # Pedido
+    # Crear pedido
     cursor.execute(
         "INSERT INTO pedidos (cliente_id, total, domicilio, total_final) VALUES (%s, %s, %s, %s) RETURNING id",
         (cliente_id, total, bool(domicilio), total_final)
     )
     pedido_id = cursor.fetchone()[0]
 
-    # Detalle
-    for bebida in productos:
+    # Guardar detalle con cantidad REAL
+    for bebida, cantidad in productos:
         cursor.execute(
             "INSERT INTO detalle_pedidos (pedido_id, bebida_id, cantidad) VALUES (%s, %s, %s)",
-            (pedido_id, bebida[0], 1)
+            (pedido_id, bebida[0], cantidad)
         )
 
     conexion.commit()
@@ -166,6 +168,7 @@ def admin():
     """)
     pedidos = cursor.fetchall()
 
+
     # Totales
     cursor.execute("SELECT COALESCE(SUM(total_final),0) FROM pedidos;")
     total_ventas = cursor.fetchone()[0]
@@ -173,7 +176,11 @@ def admin():
     cursor.execute("SELECT COUNT(*) FROM pedidos;")
     total_pedidos = cursor.fetchone()[0]
 
-    cursor.execute("SELECT COUNT(*) FROM clientes;")
+    cursor.execute("""
+    SELECT COUNT(DISTINCT c.id)
+    FROM clientes c
+    INNER JOIN pedidos p ON c.id = p.cliente_id
+    """)
     total_clientes = cursor.fetchone()[0]
 
     # Gráfica clientes
@@ -249,7 +256,7 @@ def ver_pedido(id):
 
 
 # =========================
-# 🗑️ ELIMINAR PEDIDO
+# 🗑️ ELIMINAR PEDIDO (CORREGIDO)
 # =========================
 @app.route("/eliminar_pedido/<int:id>")
 def eliminar_pedido(id):
@@ -259,8 +266,41 @@ def eliminar_pedido(id):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    cursor.execute("DELETE FROM detalle_pedidos WHERE pedido_id=%s", (id,))
-    cursor.execute("DELETE FROM pedidos WHERE id=%s", (id,))
+    # Obtener cliente del pedido
+    cursor.execute(
+        "SELECT cliente_id FROM pedidos WHERE id=%s",
+        (id,)
+    )
+    cliente = cursor.fetchone()
+
+    if cliente:
+        cliente_id = cliente[0]
+
+        # Eliminar detalle del pedido
+        cursor.execute(
+            "DELETE FROM detalle_pedidos WHERE pedido_id=%s",
+            (id,)
+        )
+
+        # Eliminar pedido
+        cursor.execute(
+            "DELETE FROM pedidos WHERE id=%s",
+            (id,)
+        )
+
+        # 🔥 VERIFICAR SI EL CLIENTE AÚN TIENE PEDIDOS
+        cursor.execute(
+            "SELECT COUNT(*) FROM pedidos WHERE cliente_id=%s",
+            (cliente_id,)
+        )
+        pedidos_restantes = cursor.fetchone()[0]
+
+        # 🔥 SOLO ELIMINAR SI NO TIENE MÁS PEDIDOS
+        if pedidos_restantes == 0:
+            cursor.execute(
+                "DELETE FROM clientes WHERE id=%s",
+                (cliente_id,)
+            )
 
     conexion.commit()
     conexion.close()

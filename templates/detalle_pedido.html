@@ -9,75 +9,107 @@
 <style>
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f4f6f9;
+    background: linear-gradient(135deg, #0f172a, #020617);
     margin: 0;
+    color: #fff;
 }
 
 /* CONTENEDOR */
 .factura {
-    width: 420px;
-    margin: 40px auto;
-    background: white;
+    width: 460px;
+    margin: 50px auto;
+    background: rgba(255,255,255,0.04);
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
 }
 
 /* HEADER */
 .header {
     text-align: center;
-    border-bottom: 2px dashed #ccc;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .header h2 {
     margin: 0;
+    font-size: 22px;
+    color: #facc15;
+}
+
+.header p {
+    margin: 5px 0;
+    font-size: 14px;
+    opacity: 0.7;
 }
 
 /* INFO */
 .info {
-    margin-top: 15px;
+    margin-top: 20px;
     font-size: 14px;
 }
 
 .info p {
-    margin: 5px 0;
+    margin: 6px 0;
+    color: #e5e7eb;
 }
 
 /* PRODUCTOS */
 .producto {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ENCABEZADO PRODUCTOS */
+.producto.header {
+    font-weight: bold;
+    color: #facc15;
+}
+
+/* TITULO */
+h4 {
+    margin-top: 20px;
+    color: #facc15;
 }
 
 /* TOTALES */
 .totales {
-    margin-top: 15px;
-    font-size: 15px;
+    margin-top: 20px;
 }
 
 .totales p {
     display: flex;
     justify-content: space-between;
+    color: #e5e7eb;
 }
 
 .total-final {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
+    color: #facc15;
+    margin-top: 10px;
 }
 
 /* BOTÓN */
 .btn {
     display: block;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     padding: 12px;
-    background: #2c5364;
-    color: white;
+    background: linear-gradient(90deg, #1e293b, #020617);
+    color: #facc15;
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #334155, #0f172a);
 }
 </style>
 </head>
@@ -86,11 +118,13 @@ body {
 
 <div class="factura">
 
+    <!-- HEADER -->
     <div class="header">
         <h2>🥤 Bebidas del Pacífico</h2>
         <p>Factura de compra</p>
     </div>
 
+    <!-- INFO -->
     <div class="info">
         <p><strong>Pedido:</strong> #{{pedido[0]}}</p>
         <p><strong>Cliente:</strong> {{pedido[1]}}</p>
@@ -99,18 +133,37 @@ body {
 
     <h4>Productos:</h4>
 
+    <!-- ENCABEZADO -->
+    <div class="producto header">
+        <span>Producto</span>
+        <span>Valor</span>
+    </div>
+
+    <!-- PRODUCTOS -->
     {% for p in productos %}
     <div class="producto">
-        <span>{{p[0]}}</span>
-        <span>$ {{p[1]}}</span>
+        <span>{{ p[0] }}</span>
+        <span>
+            ${{ "{:,}".format(p[1]).replace(",", ".") }}
+        </span>
     </div>
     {% endfor %}
 
+    <!-- TOTALES -->
     <div class="totales">
-        <p><span>Subtotal:</span> <span>$ {{pedido[3]}}</span></p>
-        <p><span>Domicilio:</span> <span>$ {{pedido[4] and 5000 or 0}}</span></p>
+        <p>
+            <span>Subtotal:</span>
+            <span>${{ "{:,}".format(pedido[3]).replace(",", ".") }}</span>
+        </p>
+
+        <p>
+            <span>Domicilio:</span>
+            <span>${{ "{:,}".format(5000 if pedido[4] else 0).replace(",", ".") }}</span>
+        </p>
+
         <p class="total-final">
-            <span>Total:</span> <span>$ {{pedido[5]}}</span>
+            <span>Total:</span>
+            <span>${{ "{:,}".format(pedido[5]).replace(",", ".") }}</span>
         </p>
     </div>
 

@@ -1,61 +1,591 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<title>Login | Brisa y Ron del Pacífico</title>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #141e30, #243b55);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        .login {
-            background: rgba(0,0,0,0.7);
-            padding: 30px;
-            border-radius: 20px;
-            width: 300px;
-            text-align: center;
-        }
+<style>
 
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: none;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
 
-        button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #00c9ff, #92fe9d);
-            cursor: pointer;
-            font-weight: bold;
-        }
-    </style>
+body{
+    min-height:100vh;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top left, rgba(0,210,255,0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(212,175,55,0.18), transparent 30%),
+    linear-gradient(135deg,#050816,#07111f,#0a1d2e);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+
+    padding:25px;
+}
+
+/* EFECTOS DE FONDO */
+
+body::before{
+    content:'';
+    position:absolute;
+
+    width:700px;
+    height:700px;
+
+    background:rgba(212,175,55,0.08);
+
+    border-radius:50%;
+
+    top:-250px;
+    left:-250px;
+
+    filter:blur(120px);
+}
+
+body::after{
+    content:'';
+    position:absolute;
+
+    width:600px;
+    height:600px;
+
+    background:rgba(0,210,255,0.08);
+
+    border-radius:50%;
+
+    bottom:-200px;
+    right:-200px;
+
+    filter:blur(120px);
+}
+
+/* CONTENEDOR */
+
+.container{
+
+    width:95%;
+    max-width:1700px;
+    min-height:88vh;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border-radius:40px;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,0.03);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+    0 0 60px rgba(0,0,0,0.6),
+    0 0 30px rgba(0,210,255,0.08);
+
+    position:relative;
+}
+
+/* IZQUIERDA */
+
+.left{
+
+    width:58%;
+
+    height:100%;
+
+    padding:80px;
+
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    background:
+    linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.55)),
+    linear-gradient(135deg,#071520,#0c2433);
+}
+
+.left::before{
+    content:'';
+
+    position:absolute;
+
+    width:450px;
+    height:450px;
+
+    background:rgba(212,175,55,0.08);
+
+    border-radius:50%;
+
+    top:-150px;
+    left:-150px;
+
+    filter:blur(100px);
+}
+
+.logo{
+
+    font-size:72px;
+    font-weight:700;
+
+    line-height:1.05;
+
+    color:#d4af37;
+
+    z-index:2;
+}
+
+.logo span{
+    color:white;
+    font-weight:300;
+}
+
+.wave{
+    color:#00d2ff;
+    font-size:42px;
+    margin-top:15px;
+}
+
+.slogan{
+
+    margin-top:45px;
+
+    font-size:62px;
+
+    line-height:1.1;
+
+    color:#f3c46b;
+
+    font-weight:600;
+
+    max-width:700px;
+}
+
+.description{
+
+    margin-top:30px;
+
+    color:#d8d8d8;
+
+    font-size:24px;
+
+    line-height:1.7;
+
+    max-width:650px;
+}
+
+.glow-box{
+
+    margin-top:45px;
+
+    width:320px;
+
+    padding:28px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,0.04);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(10px);
+
+    color:white;
+
+    box-shadow:0 0 25px rgba(0,0,0,0.35);
+}
+
+.glow-box h3{
+    color:#d4af37;
+    margin-bottom:12px;
+}
+
+/* DERECHA */
+
+.right{
+
+    width:42%;
+    height:100%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:40px;
+
+    background:
+    linear-gradient(180deg,#071520,#08111b);
+}
+
+/* CARD LOGIN */
+
+.login-card{
+
+    width:100%;
+    max-width:520px;
+
+    padding:55px;
+
+    border-radius:35px;
+
+    background:rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+    0 0 40px rgba(0,0,0,0.45),
+    0 0 15px rgba(0,210,255,0.08);
+}
+
+.login-title{
+
+    text-align:center;
+
+    font-size:54px;
+
+    color:#d4af37;
+
+    font-weight:700;
+}
+
+.login-subtitle{
+
+    text-align:center;
+
+    color:#00d2ff;
+
+    margin-top:12px;
+    margin-bottom:40px;
+
+    font-size:18px;
+}
+
+/* INPUTS */
+
+.input-group{
+    margin-bottom:25px;
+}
+
+.input-group input{
+
+    width:100%;
+
+    padding:18px 20px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:white;
+
+    font-size:17px;
+
+    outline:none;
+
+    transition:.3s;
+}
+
+.input-group input:focus{
+
+    border:1px solid #00d2ff;
+
+    box-shadow:0 0 12px rgba(0,210,255,0.35);
+}
+
+.input-group input::placeholder{
+    color:#cfcfcf;
+}
+
+/* BOTON */
+
+button{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:linear-gradient(90deg,#00d2ff,#d4af37);
+
+    color:black;
+
+    font-size:20px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 0 25px rgba(0,210,255,0.35);
+}
+
+/* FEATURES */
+
+.features{
+
+    margin-top:35px;
+
+    display:flex;
+    justify-content:space-between;
+
+    gap:10px;
+
+    text-align:center;
+}
+
+.feature{
+
+    flex:1;
+
+    color:white;
+
+    font-size:13px;
+}
+
+.feature .icon{
+
+    font-size:28px;
+
+    margin-bottom:8px;
+}
+
+/* ERROR */
+
+.error{
+
+    background:rgba(255,0,0,0.15);
+
+    border:1px solid rgba(255,0,0,0.3);
+
+    color:#ffb3b3;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    margin-bottom:20px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+
+    body{
+        overflow:auto;
+    }
+
+    .container{
+
+        flex-direction:column;
+
+        min-height:auto;
+    }
+
+    .left,
+    .right{
+        width:100%;
+    }
+
+    .left{
+        padding:50px;
+    }
+
+    .right{
+        padding:50px 20px;
+    }
+
+    .logo{
+        font-size:55px;
+    }
+
+    .slogan{
+        font-size:45px;
+    }
+
+    .description{
+        font-size:20px;
+    }
+
+    .login-card{
+        max-width:100%;
+    }
+}
+
+@media(max-width:700px){
+
+    .left{
+        padding:35px;
+    }
+
+    .logo{
+        font-size:42px;
+    }
+
+    .slogan{
+        font-size:36px;
+    }
+
+    .description{
+        font-size:17px;
+    }
+
+    .glow-box{
+        width:100%;
+    }
+
+    .login-card{
+        padding:35px;
+    }
+
+    .login-title{
+        font-size:42px;
+    }
+
+    .features{
+        flex-direction:column;
+        gap:20px;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="login">
-    <h2>🔐 Iniciar Sesión</h2>
+<div class="container">
 
-    <form method="POST">
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
+    <!-- IZQUIERDA -->
 
-        <button type="submit">Ingresar</button>
-    </form>
+    <div class="left">
+
+        <div class="logo">
+            Brisa y Ron <br>
+            <span>del Pacífico</span>
+        </div>
+
+        <div class="wave">〰〰〰</div>
+
+        <div class="slogan">
+            Sabor que<br>
+            nos conecta
+        </div>
+
+        <div class="description">
+            Tradición que brindamos,
+            momentos que compartimos
+            desde el corazón del Pacífico colombiano.
+        </div>
+
+        <div class="glow-box">
+
+            <h3>🥃 Calidad Premium</h3>
+
+            Bebidas auténticas artesanales
+            con esencia del Pacífico.
+
+        </div>
+
+    </div>
+
+    <!-- DERECHA -->
+
+    <div class="right">
+
+        <form method="POST" class="login-card">
+
+            <div class="login-title">
+                Brisa y Ron
+            </div>
+
+            <div class="login-subtitle">
+                Bebidas que cuentan nuestra historia
+            </div>
+
+            {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="input-group">
+
+                <input
+                type="text"
+                name="username"
+                placeholder="Usuario"
+                required>
+
+            </div>
+
+            <div class="input-group">
+
+                <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required>
+
+            </div>
+
+            <button type="submit">
+                Ingresar
+            </button>
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="icon">🌿</div>
+                    Productos Artesanales
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🥃</div>
+                    Calidad Premium
+                </div>
+
+                <div class="feature">
+                    <div class="icon">🌊</div>
+                    100% Pacífico
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
 </body>
